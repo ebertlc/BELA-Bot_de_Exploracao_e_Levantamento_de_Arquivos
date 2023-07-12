@@ -6,3 +6,4 @@ em desevolvimento...
 Versão atual 0.1.11
 
 k - indica bugs em estágio de correção
+g - indica alterações em ajustes para testes
