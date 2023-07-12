@@ -1,8 +1,13 @@
+import os
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 import time
+import requests
+import os
+import pdfkit
 #import pandas as pd
 
 print('....................................................................................')
@@ -89,7 +94,7 @@ for pasta in range(0, 50):
     print(f'pasta {pasta}')
 
     try:
-        arquivo = driver.find_element(By.ID, id)
+        arquivo = detalhes.find_element(By.ID, id)
     except:
         continue
 
@@ -127,7 +132,36 @@ time.sleep(5)
 gerar_pdf = driver.find_element(By.ID, 'accordion:j_idt161').click()
 print("Gerado o PDF")
 
-time.sleep(10)
+time.sleep(6)
+
+canva = detalhes.find_element(By.TAG_NAME, 'object')
+#htmlcode = canva.find_element(By.CSS_SELECTOR, '[type="application/pdf"]')
+
+#arquivo_html = canva.get_attribute("innerHTML")
+arquivo_html = canva.text
+
+temp_html = 'C:\\Users\\eber_\\Documents\\S2iD\\temp\\temp.html'
+with open(temp_html, "w") as file:
+    file.write(arquivo_html)
+
+pasta_docs = 'C:\\Users\\eber_\\Documents\\S2iD\\teste'
+os.makedirs(pasta_docs, exist_ok=True)
+pdf_pasta_docs = os.path.join(pasta_docs, 'fide_demate_teste.pdf')
+
+pdfkit.from_file(temp_html, pdf_pasta_docs)
+
+os.remove(temp_html)
+
+#pdf_url = canva.get_attribute('data')
+
+#docs = requests.get(pdf_url, verify=False)
+
+#pasta_docs = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\fide_demate_teste.pdf'
+
+#with open(pasta_docs, 'wb') as fide_dmate:
+    #fide_dmate.write(docs.content)
+
+print('Download concluído.')
 
 sair = driver.find_element(By.ID, 'sair')
 sair.click()
