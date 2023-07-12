@@ -70,6 +70,10 @@ print('duplo click')
 
 time.sleep(5)
 
+rolar = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+time. sleep(2)
+
 detalhes = driver.find_element(By.ID, 'accordion:j_idt152')
 arquivos = detalhes.find_element(By.ID, 'accordion:arquivos_disponiveis')
 reconhecimento = arquivos.find_element(By.TAG_NAME, 'span')
@@ -79,8 +83,8 @@ time.sleep(2)
 espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler')
 espandir.click()
 
-for pasta in range(0, 10):
-    print("procurando DMATE")
+print("procurando DMATE")
+for pasta in range(0, 50):
     id = f"accordion:arquivos_disponiveis:0_{pasta}"
     print(f'pasta {pasta}')
 
@@ -98,8 +102,8 @@ for pasta in range(0, 10):
         checkbox_cls.click()
         break
 
-for pasta in range(0, 10):
-    print("procurando FIDE")
+print("procurando FIDE")
+for pasta in range(0, 50):
     id = f"accordion:arquivos_disponiveis:0_{pasta}"
     print(f'pasta {pasta}')
 
@@ -116,6 +120,7 @@ for pasta in range(0, 10):
         checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
         checkbox_cls.click()
         break
+
 
 time.sleep(5)
 
