@@ -80,6 +80,7 @@ espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler')
 espandir.click()
 
 for pasta in range(0, 10):
+    print("procurando DMATE")
     id = f"accordion:arquivos_disponiveis:0_{pasta}"
     print(f'pasta {pasta}')
 
@@ -91,12 +92,14 @@ for pasta in range(0, 10):
     subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
     tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
     if tag.text == 'DMATE':
+        print(f"DMATE encontrado na pasta {pasta}")
         checkbox = arquivo.find_element(By.TAG_NAME, 'span')
         checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
         checkbox_cls.click()
         break
 
 for pasta in range(0, 10):
+    print("procurando FIDE")
     id = f"accordion:arquivos_disponiveis:0_{pasta}"
     print(f'pasta {pasta}')
 
@@ -108,6 +111,7 @@ for pasta in range(0, 10):
     subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
     tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
     if tag.text == 'FIDE':
+        print(f"DMATE encontrado na pasta {pasta}")
         checkbox = arquivo.find_element(By.TAG_NAME, 'span')
         checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
         checkbox_cls.click()
@@ -116,6 +120,7 @@ for pasta in range(0, 10):
 time.sleep(5)
 
 gerar_pdf = driver.find_element(By.ID, 'accordion:j_idt161').click()
+print("Gerado o PDF")
 
 time.sleep(10)
 
