@@ -3,8 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 import time
-
-import pandas as pd
+#import pandas as pd
 
 print('....................................................................................')
 print('....................................................................................')
@@ -30,7 +29,7 @@ botao_ok = driver.find_element(By.ID, "j_idt35")
 botao_ok.click()
 
 usuario_login = driver.find_element(By.ID, 'usuario')
-usuario_login.send_keys('cenad@mdr.gov.br')
+usuario_login.send_keys('dip@mdr.gov.br')
 
 senha_login = driver.find_element(By.ID, 'j_idt56')
 senha_login.send_keys('123456')
@@ -60,13 +59,11 @@ print('clicado enter')
 
 time.sleep(5)
 
-tabela_linha = driver.find_element(By.CSS_SELECTOR, '[data-ri="0"]')
-print('tebela encontrada')
-#tabela_celula = tabela_linha.find_element(By.CLASS_NAME, 'cell-status-unfiltered')
-print('linha encontrada')
-tabela_linha.click()
+tabela = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento_data')
+tabela_linha = tabela.find_element(By.CSS_SELECTOR, '[data-ri="0"]')
+print('tabela encontrada')
 
-print('primeiro click')
+time.sleep(1)
 
 ActionChains(driver) \
     .double_click(tabela_linha) \
