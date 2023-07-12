@@ -29,7 +29,7 @@ botao_ok = driver.find_element(By.ID, "j_idt35")
 botao_ok.click()
 
 usuario_login = driver.find_element(By.ID, 'usuario')
-usuario_login.send_keys('dip@mdr.gov.br')
+usuario_login.send_keys('dag.sedec@mdr.gov.br')
 
 senha_login = driver.find_element(By.ID, 'j_idt56')
 senha_login.send_keys('123456')
@@ -62,14 +62,20 @@ time.sleep(5)
 tabela = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento_data')
 tabela_linha = tabela.find_element(By.CSS_SELECTOR, '[data-ri="0"]')
 print('tabela encontrada')
-
 time.sleep(1)
-
-ActionChains(driver) \
-    .double_click(tabela_linha) \
-    .perform()
-
+ActionChains(driver).double_click(tabela_linha).perform()
 print('duplo click')
+
+time.sleep(5)
+
+detalhes = driver.find_element(By.ID, 'accordion:j_idt152')
+arquivos = detalhes.find_element(By.ID, 'accordion:arquivos_disponiveis')
+reconhecimento = arquivos.find_element(By.CLASS_NAME, 'ui-treenode-content ui-tree-selectable')
+
+time.sleep(2)
+
+espandir = arquivos.find_element(By.TAG_NAME, 'span')
+espandir.click()
 
 time.sleep(5)
 
