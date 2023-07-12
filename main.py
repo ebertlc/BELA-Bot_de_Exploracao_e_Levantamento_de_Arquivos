@@ -70,11 +70,11 @@ time.sleep(5)
 
 detalhes = driver.find_element(By.ID, 'accordion:j_idt152')
 arquivos = detalhes.find_element(By.ID, 'accordion:arquivos_disponiveis')
-reconhecimento = arquivos.find_element(By.CLASS_NAME, 'ui-treenode-content ui-tree-selectable')
+reconhecimento = arquivos.find_element(By.TAG_NAME, 'span')
 
 time.sleep(2)
 
-espandir = arquivos.find_element(By.TAG_NAME, 'span')
+espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler')
 espandir.click()
 
 time.sleep(5)
