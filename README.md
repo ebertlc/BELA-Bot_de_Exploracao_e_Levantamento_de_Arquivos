@@ -5,4 +5,4 @@ Bot em Python que automatiza tarefas de navegação na web. Ele pesquisa process
 em desevolvimento...
 vesaão atual 0.1.11k
 
-k - indica bugs em estáio de correção
+k - indica bugs em estágio de correção
