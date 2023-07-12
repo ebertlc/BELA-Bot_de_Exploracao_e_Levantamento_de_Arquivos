@@ -135,31 +135,14 @@ print("Gerado o PDF")
 time.sleep(6)
 
 canva = detalhes.find_element(By.TAG_NAME, 'object')
-#htmlcode = canva.find_element(By.CSS_SELECTOR, '[type="application/pdf"]')
+page = canva.find_element(By.TAG_NAME, 'html')
+container = page.find_element(By.ID, 'mainContainer')
+toolbar = container.find_element(By.ID, 'toolbarContainer')
+toolbar_viewer = toolbar.find_element(By.ID, 'toolbarViewer')
+toolbar_viewer_direita = toolbar_viewer.find_element(By.ID, 'toolbarViewerRight')
+download = toolbar_viewer_direita.find_element(By.ID, 'download').click()
 
-#arquivo_html = canva.get_attribute("innerHTML")
-arquivo_html = canva.text
 
-temp_html = 'C:\\Users\\eber_\\Documents\\S2iD\\temp\\temp.html'
-with open(temp_html, "w") as file:
-    file.write(arquivo_html)
-
-pasta_docs = 'C:\\Users\\eber_\\Documents\\S2iD\\teste'
-os.makedirs(pasta_docs, exist_ok=True)
-pdf_pasta_docs = os.path.join(pasta_docs, 'fide_demate_teste.pdf')
-
-pdfkit.from_file(temp_html, pdf_pasta_docs)
-
-os.remove(temp_html)
-
-#pdf_url = canva.get_attribute('data')
-
-#docs = requests.get(pdf_url, verify=False)
-
-#pasta_docs = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\fide_demate_teste.pdf'
-
-#with open(pasta_docs, 'wb') as fide_dmate:
-    #fide_dmate.write(docs.content)
 
 print('Download concluído.')
 
