@@ -77,6 +77,7 @@ time.sleep(2)
 espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler')
 espandir.click()
 
+
 time.sleep(5)
 
 sair = driver.find_element(By.ID, 'sair')
