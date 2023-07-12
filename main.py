@@ -21,7 +21,7 @@ driver = webdriver.Firefox()
 #usuarios = base_usuarios(caminho_dataset)
 
 # Acessar a página de pesquisa
-driver.get('https://homologacaos2id.mdr.gov.br/')
+driver.get('https://s2id.mi.gov.br/paginas/index.xhtml')
 
 print('sistema acessado')
 
@@ -29,26 +29,28 @@ botao_ok = driver.find_element(By.ID, "j_idt35")
 botao_ok.click()
 
 usuario_login = driver.find_element(By.ID, 'usuario')
-usuario_login.send_keys('dag.sedec@mdr.gov.br')
+usuario_login.send_keys('eber.elias@mdr.gov.br')
 
 senha_login = driver.find_element(By.ID, 'j_idt56')
-senha_login.send_keys('123456')
+senha_login.send_keys('Flasco@4528')
 
 botao_login = driver.find_element(By.ID, 'btnEnter')
 botao_login.click()
 
 print('login efetuado')
 
-time.sleep(1)
+time.sleep(5)
 
 rec_federal = driver.find_element(By.CSS_SELECTOR, '[title="Reconhecimento Federal"]')
 rec_federal.click()
 
-time.sleep(10)
 print('entrando no modulo Reconhcimento')
 
+time.sleep(10)
+print('timer exedido')
 
-campo_pesquisa = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento:j_idt193:filter')
+
+campo_pesquisa = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento:j_idt123:filter')
 campo_pesquisa.clear()
 campo_pesquisa.send_keys('PI-F-2200053-14110-20230621')
 print('pesquisa adicionada')
