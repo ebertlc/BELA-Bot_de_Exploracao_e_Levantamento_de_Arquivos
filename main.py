@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
 import time
 import requests
 import os
@@ -135,13 +136,15 @@ print("Gerado o PDF")
 time.sleep(6)
 
 canva = detalhes.find_element(By.TAG_NAME, 'object')
-page = canva.find_element(By.TAG_NAME, 'html')
-container = page.find_element(By.ID, 'mainContainer')
+
+driver.switch_to.frame(canva)
+container = driver.find_element(By.ID, 'mainContainer')
 toolbar = container.find_element(By.ID, 'toolbarContainer')
 toolbar_viewer = toolbar.find_element(By.ID, 'toolbarViewer')
 toolbar_viewer_direita = toolbar_viewer.find_element(By.ID, 'toolbarViewerRight')
 download = toolbar_viewer_direita.find_element(By.ID, 'download').click()
 
+driver.switch_to.default_content()
 
 
 print('Download concluído.')
