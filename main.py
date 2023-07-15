@@ -4,11 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support import expected_conditions as EC
+import pyautogui
 import time
-import requests
-import os
-import pdfkit
 #import pandas as pd
 
 print('....................................................................................')
@@ -35,10 +32,10 @@ botao_ok = driver.find_element(By.ID, "j_idt35")
 botao_ok.click()
 
 usuario_login = driver.find_element(By.ID, 'usuario')
-usuario_login.send_keys('eber.elias@mdr.gov.br')
+usuario_login.send_keys('divisao.gestao@mdr.gov.br')
 
 senha_login = driver.find_element(By.ID, 'j_idt56')
-senha_login.send_keys('Flasco@4528')
+senha_login.send_keys('csp123')
 
 botao_login = driver.find_element(By.ID, 'btnEnter')
 botao_login.click()
@@ -146,8 +143,30 @@ download = toolbar_viewer_direita.find_element(By.ID, 'download').click()
 
 driver.switch_to.default_content()
 
-
 print('Download concluído.')
+
+time.sleep(5)
+
+# Obtenha o diretório onde você deseja salvar o arquivo
+caminho = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\teste_salvar.pdf'
+
+# Simule o pressionamento da tecla 'Tab' para mover o foco para o campo de nome do arquivo
+#pyautogui.press('tab')
+
+# Insira o nome do arquivo desejado
+pyautogui.typewrite(caminho)
+
+time.sleep(2)
+
+# Simule o pressionamento da tecla 'Enter' para confirmar o nome do arquivo
+pyautogui.press('enter')
+
+# Aguarde um curto período para que o arquivo seja salvo
+time.sleep(1)
+
+print('Arquivo salvo')
+
+
 
 sair = driver.find_element(By.ID, 'sair')
 sair.click()
