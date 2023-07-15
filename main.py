@@ -50,10 +50,12 @@ print('entrando no modulo Reconhcimento')
 time.sleep(10)
 print('timer exedido')
 
+protocolo = 'AL-F-2708501-13214-20230707'
+
 
 campo_pesquisa = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento:j_idt123:filter')
 campo_pesquisa.clear()
-campo_pesquisa.send_keys('AL-F-2708501-13214-20230707')
+campo_pesquisa.send_keys(protocolo)
 print('pesquisa adicionada')
 time.sleep(2)
 
@@ -167,7 +169,7 @@ app = Application(backend="win32").connect(title='Salvar como')
 
 dlg = app.window(title='Salvar como')
 
-caminho = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\teste_salvar_novo_5_final.pdf'
+caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\Relatorios\\FIDE-DEMATE_municipio_{protocolo}_status.pdf'
 
 # Localizar o campo "Nome do arquivo" na janela "Salvar como" pelo índice
 filename_input = dlg.child_window(class_name='Edit', found_index=0)
