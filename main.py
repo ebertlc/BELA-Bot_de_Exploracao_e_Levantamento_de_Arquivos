@@ -58,7 +58,8 @@ print('\n..........................Entrando no modulo Reconhcimento.............
 #            'PE-F-2603405-14110-20230627',
 #          }
 
-protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\usuarios_desabilitar.xlsx'
+caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\usuarios_desabilitar.xlsx'
+protocolos = pd.read_excel(caminho_protocolos)
 
 for index, row in protocolos:
     protocolo = row['PROTOCOLO']
