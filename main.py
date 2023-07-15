@@ -55,7 +55,7 @@ print('timer exedido')
 
 campo_pesquisa = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento:j_idt123:filter')
 campo_pesquisa.clear()
-campo_pesquisa.send_keys('PI-F-2200053-14110-20230621')
+campo_pesquisa.send_keys('AL-F-2708501-13214-20230707')
 print('pesquisa adicionada')
 time.sleep(2)
 
@@ -78,17 +78,35 @@ rolar = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 time. sleep(2)
 
 detalhes = driver.find_element(By.ID, 'accordion:j_idt152')
-arquivos = detalhes.find_element(By.ID, 'accordion:arquivos_disponiveis')
-reconhecimento = arquivos.find_element(By.TAG_NAME, 'span')
 
-time.sleep(2)
-
-espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler')
-espandir.click()
+arquivos_disponiveis = ''
 
 print("procurando DMATE")
 for pasta in range(0, 50):
-    id = f"accordion:arquivos_disponiveis:0_{pasta}"
+    id = f"accordion:arquivos_disponiveis:{pasta}"
+    print(f'pasta {pasta}')
+
+    try:
+        arquivo = detalhes.find_element(By.ID, id)
+    except:
+        continue
+
+    subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
+    tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
+    if tag.text == 'RECONHECIMENTO':
+        print(f"RECONHECIMENTO encontrado na pasta {pasta}")
+        arquivos_disponiveis = id
+        reconhecimento = arquivo.find_element(By.TAG_NAME, 'span')
+        time.sleep(2)
+        espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler')
+        espandir.click()
+        break
+
+time. sleep(2)
+
+print("procurando DMATE")
+for pasta in range(0, 50):
+    id = f"{arquivos_disponiveis}_{pasta}"
     print(f'pasta {pasta}')
 
     try:
@@ -107,7 +125,7 @@ for pasta in range(0, 50):
 
 print("procurando FIDE")
 for pasta in range(0, 50):
-    id = f"accordion:arquivos_disponiveis:0_{pasta}"
+    id = f"{arquivos_disponiveis}_{pasta}"
     print(f'pasta {pasta}')
 
     try:
@@ -148,7 +166,7 @@ print('Download concluído.')
 time.sleep(5)
 
 # Obtenha o diretório onde você deseja salvar o arquivo
-caminho = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\teste_salvar.pdf'
+caminho = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\teste_salvar3.pdf'
 
 # Simule o pressionamento da tecla 'Tab' para mover o foco para o campo de nome do arquivo
 #pyautogui.press('tab')
@@ -160,12 +178,12 @@ time.sleep(2)
 
 # Simule o pressionamento da tecla 'Enter' para confirmar o nome do arquivo
 pyautogui.press('enter')
+pyautogui.press('enter')
 
 # Aguarde um curto período para que o arquivo seja salvo
 time.sleep(1)
 
 print('Arquivo salvo')
-
 
 
 sair = driver.find_element(By.ID, 'sair')
