@@ -39,3 +39,11 @@ O bot irá abrir o navegador Firefox, fazer login no sistema S2iD, pesquisar o p
 ## Licença
 
 Este projeto está licenciado sob a Licença MIT. Consulte o arquivo LICENSE para obter mais informações.
+
+## Contribuições
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir problemas (issues) e enviar solicitações de pull request para aprimorar o sistema.
+
+## Autores
+
+Eber Lucas Cerqueira Elias
