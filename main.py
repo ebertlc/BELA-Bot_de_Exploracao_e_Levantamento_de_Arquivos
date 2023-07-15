@@ -1,10 +1,8 @@
-import os
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
-import pyautogui
+from pywinauto import Application
 import time
 #import pandas as pd
 
@@ -32,10 +30,10 @@ botao_ok = driver.find_element(By.ID, "j_idt35")
 botao_ok.click()
 
 usuario_login = driver.find_element(By.ID, 'usuario')
-usuario_login.send_keys('divisao.gestao@mdr.gov.br')
+usuario_login.send_keys('email@dominio.br')
 
 senha_login = driver.find_element(By.ID, 'j_idt56')
-senha_login.send_keys('csp123')
+senha_login.send_keys('123456')
 
 botao_login = driver.find_element(By.ID, 'btnEnter')
 botao_login.click()
@@ -165,23 +163,19 @@ print('Download concluído.')
 
 time.sleep(5)
 
-# Obtenha o diretório onde você deseja salvar o arquivo
-caminho = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\teste_salvar3.pdf'
+app = Application(backend="win32").connect(title='Salvar como')
 
-# Simule o pressionamento da tecla 'Tab' para mover o foco para o campo de nome do arquivo
-#pyautogui.press('tab')
+dlg = app.window(title='Salvar como')
 
-# Insira o nome do arquivo desejado
-pyautogui.typewrite(caminho)
+caminho = 'C:\\Users\\eber_\\Documents\\S2iD\\teste\\teste_salvar_novo_5_final.pdf'
+
+# Localizar o campo "Nome do arquivo" na janela "Salvar como" pelo índice
+filename_input = dlg.child_window(class_name='Edit', found_index=0)
+filename_input.set_edit_text(caminho)
 
 time.sleep(2)
 
-# Simule o pressionamento da tecla 'Enter' para confirmar o nome do arquivo
-pyautogui.press('enter')
-pyautogui.press('enter')
-
-# Aguarde um curto período para que o arquivo seja salvo
-time.sleep(1)
+filename_input.type_keys('{ENTER}')  # Digita a tecla Enter para ativar o botão "Salvar"
 
 print('Arquivo salvo')
 
