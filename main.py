@@ -18,7 +18,8 @@ print('............ B.E.L.A. - Bot de Exploração e Levantamento de Arquivos ..
 print('....................................................................................')
 print('....................................................................................')
 
-print('\n\n...................................Iniciando BELA...................................')
+print('\n\n')
+print('...................................Iniciando BELA...................................')
 # Configurar o driver do Firefox
 driver = webdriver.Firefox()
 
@@ -29,10 +30,11 @@ driver.get('https://s2id.mi.gov.br/paginas/index.xhtml')
 botao_ok = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "j_idt35")))
 botao_ok.click()
 
-print('\n')
-print('\n.....................................S2iD Ativo.....................................')
+print('\n\n')
+print('.....................................S2iD Ativo.....................................')
 
-
+Login = 'eber.elias@mdr.gov.br'
+Senha = 'Flasco@4528'
 
 # Fazer login
 usuario_login = driver.find_element(By.ID, 'usuario').send_keys(Login)
@@ -41,13 +43,13 @@ time.sleep(1)
 
 botao_login = driver.find_element(By.ID, 'btnEnter').click()
 
-print('\n...................................Usuario logado...................................')
+print('...................................Usuario logado...................................')
 
 # Acessar o módulo "Reconhecimento Federal"
 rec_federal = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '[title="Reconhecimento Federal"]')))
 rec_federal.click()
 
-print('\n..........................Entrando no modulo Reconhcimento..........................')
+print('..........................Entrando no modulo Reconhcimento..........................')
 
 # Definir o protocolo a ser pesquisado -  Por Enquanto
 #protocolos = {'AL-F-2708501-13214-20230707',
@@ -58,7 +60,7 @@ print('\n..........................Entrando no modulo Reconhcimento.............
 #            'PE-F-2603405-14110-20230627',
 #          }
 
-caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\usuarios_desabilitar.xlsx'
+caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\arquivos.xlsx'
 protocolos = pd.read_excel(caminho_protocolos)
 
 for index, row in protocolos:
@@ -74,7 +76,8 @@ for index, row in protocolos:
     time.sleep(1)
     campo_pesquisa.send_keys(Keys.ENTER)
 
-    print('\n.................................Pesquisa Concluida.................................')
+    print('\n\n')
+    print('.................................Pesquisa Concluida.................................')
     time.sleep(2)
 
     # Localizar a tabela de processos
@@ -84,12 +87,12 @@ for index, row in protocolos:
     tabela_linha = tabela.find_element(By.CSS_SELECTOR, '[data-ri="0"]')
     time.sleep(1)
 
-    print('\n................................Protocolo Localizado................................')
+    print('................................Protocolo Localizado................................')
 
     # Acessar o detalhe do protocolo
     ActionChains(driver).double_click(tabela_linha).perform()
 
-    print('\n................................Acessando  Protocolo................................')
+    print('................................Acessando  Protocolo................................')
 
     # Aguardar até o elemento onde os arquivos estão apareça
     detalhes = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'accordion:j_idt152')))
@@ -99,7 +102,7 @@ for index, row in protocolos:
 
     arquivos_disponiveis = ''
 
-    print('\n.............................Procurando  RECONHECIMENTO.............................')
+    print('.............................Procurando  RECONHECIMENTO.............................')
     # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do Reconhecimento e expandi-la
     for pasta in range(0, 50):
         id = f"accordion:arquivos_disponiveis:{pasta}"
@@ -116,7 +119,7 @@ for index, row in protocolos:
         tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
         # Verificar se o texto da tag é igual a 'RECONHECIMENTO'
         if tag.text == 'RECONHECIMENTO':
-            print(f'\n........................RECONHECIMENTO Encontrado na Pasta {pasta + 1}........................')
+            print(f'........................RECONHECIMENTO Encontrado na Pasta {pasta + 1}........................')
             arquivos_disponiveis = id
             # Encontrar o elemento de expansão para mostrar os subelementos
             reconhecimento = arquivo.find_element(By.TAG_NAME, 'span')
@@ -125,7 +128,7 @@ for index, row in protocolos:
             break
     time. sleep(2)
 
-    print('\n.................................Procurando  DMATE..................................')
+    print('.................................Procurando  DMATE..................................')
     # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do DMATE e marca-la
     for pasta in range(0, 50):
         id = f"{arquivos_disponiveis}_{pasta}"
@@ -150,7 +153,7 @@ for index, row in protocolos:
             # Sair do loop
             break
 
-    print('\n..................................Procurando FIDE...................................')
+    print('..................................Procurando FIDE...................................')
     # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do FIDE e marca-la
     for pasta in range(0, 50):
         id = f"{arquivos_disponiveis}_{pasta}"
@@ -184,7 +187,7 @@ for index, row in protocolos:
     # Localizar o elemento "object" e mudar para o frame
     canva = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'object')))
 
-    print('\n....................................PDF  GERADO.....................................')
+    print('....................................PDF  GERADO.....................................')
 
     time.sleep(1)
 
@@ -205,7 +208,7 @@ for index, row in protocolos:
 
     time.sleep(3)
     #definir o caminho onde será salvo e o nome do aqruivo
-    caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\teste\\FIDE-DEMATE_municipio_{protocolo}_status4.pdf'
+    caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\teste\\FIDE-DEMATE_municipio_{protocolo}_status_teste1.pdf'
 
     app = Application(backend="win32").connect(title='Salvar como')
     dlg = app.window(title='Salvar como')
@@ -216,12 +219,13 @@ for index, row in protocolos:
     time.sleep(1)
     filename_input.type_keys('{ENTER}')  # Digita a tecla Enter para ativar o botão "Salvar"
 
-    print('\n...................................Arquivo Salvo....................................')
+    print('...................................Arquivo Salvo....................................')
 
     # Voltar para a página de pesquisa
     botao_voltar = driver.find_element(By.ID, 'j_idt26').click()
 
-    print('\n............................Voltar a Pagina de Pesquisa.............................')
+    print('\n')
+    print('............................Voltar a Pagina de Pesquisa.............................')
 
     end_time = time.time()
     execution_time = end_time - start_time
@@ -233,4 +237,5 @@ for index, row in protocolos:
 time.sleep(10)
 sair = driver.find_element(By.ID, 'sair').click()
 
-print('\n.................................Script Execultado..................................')
+print('\n\n')
+print('.................................Script Execultado..................................')
