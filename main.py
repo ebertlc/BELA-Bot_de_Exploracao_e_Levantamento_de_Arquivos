@@ -3,6 +3,7 @@
 #....................................................................................
 
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -22,7 +23,18 @@ print('.........................................................................
 print('\n\n')
 print('...................................Iniciando BELA...................................')
 # Configurar o driver do Firefox
-driver = webdriver.Firefox()
+
+# Criar um objeto Options para configurar o perfil do Firefox
+options = Options()
+
+# Desativar o cache
+options.set_preference("browser.cache.disk.enable", False)
+options.set_preference("browser.cache.memory.enable", False)
+options.set_preference("browser.cache.offline.enable", False)
+options.set_preference("network.http.use-cache", False)
+
+# Iniciar o driver do Firefox com o perfil personalizado
+driver = webdriver.Firefox(options=options)
 
 # Acessar a página de pesquisa
 driver.get('https://s2id.mi.gov.br/paginas/index.xhtml')
@@ -75,6 +87,10 @@ for index, row in protocolos.iterrows():
     status = row['STATUS']
     data = row['DATA']
 
+    relatorio.at[index, 'MUNICIPIO'] = municipio
+    relatorio.at[index, 'DATA'] = data
+    relatorio.at[index, 'PROTOCOLO'] = protocolo
+
     # Iniciar o cronômetro
     start_time = time.time()
 
@@ -98,9 +114,7 @@ for index, row in protocolos.iterrows():
         time.sleep(2)
     except NoSuchElementException:
         print("Elemento não encontrado. Reiniciando o loop.")
-        relatorio.at[index, 'MUNICIPIO'] = municipio
-        relatorio.at[index, 'DATA'] = data
-        relatorio.at[index, 'PROTOCOLO'] = protocolo
+
         relatorio.at[index, 'RESULTADO'] = 'Protocolo não localizado no S2id'
         continue
 
@@ -167,13 +181,37 @@ for index, row in protocolos.iterrows():
                 break
         else:
             print("RECONHECIMENTO não encontrado em nenhuma pasta.")
-            relatorio.at[index, 'MUNICIPIO'] = municipio
-            relatorio.at[index, 'DATA'] = data
-            relatorio.at[index, 'PROTOCOLO'] = protocolo
+
             relatorio.at[index, 'RESULTADO'] = 'Protocolo não possui arquivos'
+
             botao_voltar = driver.find_element(By.ID, 'j_idt26').click()
             continue
     time. sleep(2)
+
+    print('.................................Procurando  CAPA..................................')
+    # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do DMATE e marca-la
+    for pasta in range(0, 50):
+        id = f"{arquivos_disponiveis}_{pasta}"
+        print(f'......................................pasta  {pasta+1}......................................')
+
+        # Verifica se o id existe
+        try:
+            arquivo = detalhes.find_element(By.ID, id)
+        except:
+            continue
+
+        # Encontrar o elemento de tag que contém o texto do nó
+        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
+        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
+        # Verificar se o texto da tag é igual a 'DMATE'
+        if tag.text == 'CAPA':
+            print(f'............................CAPA Encontrada na Pasta {pasta+1}.............................')
+            # Encontrar o elemento de checkbox para marcar os subelementos
+            checkbox = arquivo.find_element(By.TAG_NAME, 'span')
+            checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
+            checkbox_cls.click()
+            # Sair do loop
+            break
 
     print('.................................Procurando  DMATE..................................')
     # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do DMATE e marca-la
@@ -225,6 +263,31 @@ for index, row in protocolos.iterrows():
             # Sair do loop
             break
 
+    print('..................................Procurando DEATE...................................')
+    # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do FIDE e marca-la
+    for pasta in range(0, 50):
+        id = f"{arquivos_disponiveis}_{pasta}"
+        print(f'......................................pasta  {pasta+1}......................................')
+
+        # Verifica se o id existe
+        try:
+            arquivo = driver.find_element(By.ID, id)
+        except:
+            continue
+
+        # Encontrar o elemento de tag que contém o texto do nó
+        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
+        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
+        # Verificar se o texto da tag é igual a 'FIDE'
+        if tag.text == 'DEATE':
+            print(f'............................DEATE Encontrado na Pasta {pasta+1}..............................')
+            # Encontrar o elemento de checkbox para marcar os subelementos
+            checkbox = arquivo.find_element(By.TAG_NAME, 'span')
+            checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
+            checkbox_cls.click()
+            # Sair do loop
+            break
+
     time.sleep(1)
 
     # Gerar o PDF
@@ -241,6 +304,9 @@ for index, row in protocolos.iterrows():
     # Mudar para o frame do objeto "object"
     driver.switch_to.frame(canva)
     # Isso permite interagir com elementos dentro do frame
+
+    viewerContainer = driver.find_element(By.ID, 'viewerContainer')
+    page = WebDriverWait(viewerContainer, 20).until(EC.presence_of_element_located((By.CLASS_NAME, 'page')))
 
     # Localizar o elemento de download dentro da parte direita do visualizador de ferramentas e clicar nele
     container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'mainContainer')))
@@ -271,9 +337,9 @@ for index, row in protocolos.iterrows():
     loop_verify = 0
     while True:  # Loop infinito
         try:
-            contagem = loop_verify+1
+            loop_verify += 1
 
-            print(f'Verificação: {contagem}')
+            print(f'Verificação: {loop_verify}')
             app_verify = Application(backend='win32').connect(title='Salvar como')
             tela_verify = app_verify.window(title='Salvar como')
 
@@ -288,9 +354,7 @@ for index, row in protocolos.iterrows():
 
     print('...................................Arquivo Salvo....................................')
 
-    relatorio.at[index, 'MUNICIPIO'] = municipio
-    relatorio.at[index, 'DATA'] = data
-    relatorio.at[index, 'PROTOCOLO'] = protocolo
+
     relatorio.at[index, 'RESULTADO'] = 'Arquivo gerado'
 
     # Voltar para a página de pesquisa
