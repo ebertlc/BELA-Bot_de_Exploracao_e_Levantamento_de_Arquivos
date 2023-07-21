@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 from pywinauto import Application
@@ -33,8 +34,7 @@ botao_ok.click()
 print('\n\n')
 print('.....................................S2iD Ativo.....................................')
 
-Login = 'eber.elias@mdr.gov.br'
-Senha = 'Flasco@4528'
+
 
 # Fazer login
 usuario_login = driver.find_element(By.ID, 'usuario').send_keys(Login)
@@ -52,19 +52,28 @@ rec_federal.click()
 print('..........................Entrando no modulo Reconhcimento..........................')
 
 # Definir o protocolo a ser pesquisado -  Por Enquanto
-#protocolos = {'AL-F-2708501-13214-20230707',
-#            'RN-F-2410603-14110-20230713',
-#            'PA-F-1506609-13214-20230626',
-#            'PR-F-4102901-12100-20230711',
-#            'AL-F-2701100-13214-20230708',
-#            'PE-F-2603405-14110-20230627',
-#          }
+#protocolos = {'AC-F-1200401-12100-20130325',
+ #           'RN-F-2410603-14110-20230713',
+  #          'AC-F-1200401-14110-20160707',
+   #         'PA-F-1506609-13214-20230626',
+    #        'PR-F-4102901-12100-20230711',
+     #       'AL-F-2701100-13214-20230708',
+      #      'PE-F-2603405-14110-20230627',
+       #   }
 
-caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\arquivos.xlsx'
+caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\protcolos_ac.xlsx'
+caminho_relatorio = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\modelorelatorio_arquivosgerados.xlsx'
 protocolos = pd.read_excel(caminho_protocolos)
+relatorio = pd.read_excel(caminho_relatorio)
+#index = 0
+#for protocolo in protocolos:
+ #   index += 1
 
-for index, row in protocolos:
+for index, row in protocolos.iterrows():
     protocolo = row['PROTOCOLO']
+    municipio = row['MUNICIPIO']
+    status = row['STATUS']
+    data = row['DATA']
 
     # Iniciar o cronômetro
     start_time = time.time()
@@ -78,14 +87,22 @@ for index, row in protocolos:
 
     print('\n\n')
     print('.................................Pesquisa Concluida.................................')
-    time.sleep(2)
+    time.sleep(4)
 
     # Localizar a tabela de processos
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento_data')))
 
-    tabela = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento_data')
-    tabela_linha = tabela.find_element(By.CSS_SELECTOR, '[data-ri="0"]')
-    time.sleep(1)
+    try:
+        tabela = driver.find_element(By.ID, 'accordion:form-reconhecimento:tbl-processos-reconhecimento_data')
+        tabela_linha = tabela.find_element(By.CSS_SELECTOR, '[data-ri="0"]')
+        time.sleep(2)
+    except NoSuchElementException:
+        print("Elemento não encontrado. Reiniciando o loop.")
+        relatorio.at[index, 'MUNICIPIO'] = municipio
+        relatorio.at[index, 'DATA'] = data
+        relatorio.at[index, 'PROTOCOLO'] = protocolo
+        relatorio.at[index, 'RESULTADO'] = 'Protocolo não localizado no S2id'
+        continue
 
     print('................................Protocolo Localizado................................')
 
@@ -126,6 +143,36 @@ for index, row in protocolos:
             espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler').click()
             # Sair do loop
             break
+    else:
+        print("RECONHECIMENTO não encontrado em nenhuma pasta.")
+        for pasta in range(0, 50):
+            print(f'......................................pasta  {pasta + 1}......................................')
+
+            # Verifica se o id existe
+            try:
+                arquivo_if = detalhes.find_element(By.ID, 'accordion:selecionar_todos')
+            except:
+                continue
+
+            # Encontrar o elemento de tag que contém o texto do nó
+            subarquivo_if = detalhes.find_element(By.ID, 'accordion:detalhes_pdf')
+            tag_if = subarquivo_if.find_element(By.TAG_NAME, 'label')
+            # Verificar se o texto da tag é igual a 'RECONHECIMENTO'
+            if tag_if.text == 'Selecionar todos':
+                # Encontrar o elemento de checkbox para marcar os subelementos
+                time.sleep(1)
+                checkbox_if = subarquivo_if.find_element(By.TAG_NAME, 'span').click()
+                #checkbox_if.find_element(By.CLASS_NAME, 'ui-chkbox-icon').click()
+                # Sair do loop
+                break
+        else:
+            print("RECONHECIMENTO não encontrado em nenhuma pasta.")
+            relatorio.at[index, 'MUNICIPIO'] = municipio
+            relatorio.at[index, 'DATA'] = data
+            relatorio.at[index, 'PROTOCOLO'] = protocolo
+            relatorio.at[index, 'RESULTADO'] = 'Protocolo não possui arquivos'
+            botao_voltar = driver.find_element(By.ID, 'j_idt26').click()
+            continue
     time. sleep(2)
 
     print('.................................Procurando  DMATE..................................')
@@ -206,9 +253,10 @@ for index, row in protocolos:
     driver.switch_to.default_content()
     # Isso é necessário para interagir com elementos fora do frame
 
-    time.sleep(3)
+    time.sleep(5)
     #definir o caminho onde será salvo e o nome do aqruivo
-    caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\teste\\FIDE-DEMATE_municipio_{protocolo}_status_teste1.pdf'
+    caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_{municipio}_{protocolo}_{status}.pdf'
+    #caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_teste_{protocolo}_teste{index}.pdf'
 
     app = Application(backend="win32").connect(title='Salvar como')
     dlg = app.window(title='Salvar como')
@@ -216,10 +264,34 @@ for index, row in protocolos:
     # Localizar o campo "Nome do arquivo" na janela "Salvar como" pelo índice
     filename_input = dlg.child_window(class_name='Edit', found_index=0)
     filename_input.set_edit_text(caminho)
-    time.sleep(1)
+    time.sleep(2)
     filename_input.type_keys('{ENTER}')  # Digita a tecla Enter para ativar o botão "Salvar"
+    time.sleep(2)
+
+    loop_verify = 0
+    while True:  # Loop infinito
+        try:
+            contagem = loop_verify+1
+
+            print(f'Verificação: {contagem}')
+            app_verify = Application(backend='win32').connect(title='Salvar como')
+            tela_verify = app_verify.window(title='Salvar como')
+
+            filename_input_verify = tela_verify.child_window(class_name='Edit', found_index=0)
+            time.sleep(2)
+            filename_input_verify.type_keys('{ENTER}')
+            time.sleep(2)
+
+            continue
+        except:
+            break
 
     print('...................................Arquivo Salvo....................................')
+
+    relatorio.at[index, 'MUNICIPIO'] = municipio
+    relatorio.at[index, 'DATA'] = data
+    relatorio.at[index, 'PROTOCOLO'] = protocolo
+    relatorio.at[index, 'RESULTADO'] = 'Arquivo gerado'
 
     # Voltar para a página de pesquisa
     botao_voltar = driver.find_element(By.ID, 'j_idt26').click()
@@ -233,9 +305,13 @@ for index, row in protocolos:
     # Imprimir o tempo de execução
     print(f"Tempo de execução: {execution_time} segundos")
 
+relatorio.to_excel('C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_Relatorio.xlsx', index=False)
+
 # Deslogar do sistema
 time.sleep(10)
 sair = driver.find_element(By.ID, 'sair').click()
+
+driver.close()
 
 print('\n\n')
 print('.................................Script Execultado..................................')
