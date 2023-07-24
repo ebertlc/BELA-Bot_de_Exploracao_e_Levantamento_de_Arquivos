@@ -214,30 +214,30 @@ for index, row in protocolos.iterrows():
             # Sair do loop
             break
 
-    print('.................................Procurando  DMATE..................................')
+   # print('.................................Procurando  DMATE..................................')
     # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do DMATE e marca-la
-    for pasta in range(0, 50):
-        id = f"{arquivos_disponiveis}_{pasta}"
-        print(f'......................................pasta  {pasta+1}......................................')
+    #for pasta in range(0, 50):
+     #   id = f"{arquivos_disponiveis}_{pasta}"
+      #  print(f'......................................pasta  {pasta+1}......................................')
 
         # Verifica se o id existe
-        try:
-            arquivo = detalhes.find_element(By.ID, id)
-        except:
-            continue
+       # try:
+        #    arquivo = detalhes.find_element(By.ID, id)
+     #   except:
+      #      continue
 
         # Encontrar o elemento de tag que contém o texto do nó
-        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
-        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
+      #  subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
+       # tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
         # Verificar se o texto da tag é igual a 'DMATE'
-        if tag.text == 'DMATE':
-            print(f'............................DMATE Encontrado na Pasta {pasta+1}.............................')
+      #  if tag.text == 'DMATE':
+       #     print(f'............................DMATE Encontrado na Pasta {pasta+1}.............................')
             # Encontrar o elemento de checkbox para marcar os subelementos
-            checkbox = arquivo.find_element(By.TAG_NAME, 'span')
-            checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
-            checkbox_cls.click()
+        #    checkbox = arquivo.find_element(By.TAG_NAME, 'span')
+         #   checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
+          #  checkbox_cls.click()
             # Sair do loop
-            break
+           # break
 
     print('..................................Procurando FIDE...................................')
     # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do FIDE e marca-la
@@ -264,30 +264,30 @@ for index, row in protocolos.iterrows():
             # Sair do loop
             break
 
-    print('..................................Procurando DEATE...................................')
+    #print('..................................Procurando DEATE...................................')
     # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do FIDE e marca-la
-    for pasta in range(0, 50):
-        id = f"{arquivos_disponiveis}_{pasta}"
-        print(f'......................................pasta  {pasta+1}......................................')
-
-        # Verifica se o id existe
-        try:
-            arquivo = driver.find_element(By.ID, id)
-        except:
-            continue
+    #for pasta in range(0, 50):
+    #    id = f"{arquivos_disponiveis}_{pasta}"
+    #    print(f'......................................pasta  {pasta+1}......................................')
+#
+   #     # Verifica se o id existe
+    #    try:
+     #       arquivo = driver.find_element(By.ID, id)
+      #  except:
+       #     continue
 
         # Encontrar o elemento de tag que contém o texto do nó
-        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
-        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
+    #    subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
+     #   tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
         # Verificar se o texto da tag é igual a 'FIDE'
-        if tag.text == 'DEATE':
-            print(f'............................DEATE Encontrado na Pasta {pasta+1}..............................')
-            # Encontrar o elemento de checkbox para marcar os subelementos
-            checkbox = arquivo.find_element(By.TAG_NAME, 'span')
-            checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
-            checkbox_cls.click()
+      #  if tag.text == 'DEATE':
+       #     print(f'............................DEATE Encontrado na Pasta {pasta+1}..............................')
+        #    # Encontrar o elemento de checkbox para marcar os subelementos
+         #   checkbox = arquivo.find_element(By.TAG_NAME, 'span')
+          #  checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
+           # checkbox_cls.click()
             # Sair do loop
-            break
+            #break
 
     time.sleep(1)
 
