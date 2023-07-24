@@ -46,7 +46,8 @@ botao_ok.click()
 print('\n\n')
 print('.....................................S2iD Ativo.....................................')
 
-
+Login = 'eber.elias@mdr.gov.br'
+Senha = 'Flasco@4528'
 
 # Fazer login
 usuario_login = driver.find_element(By.ID, 'usuario').send_keys(Login)
@@ -73,7 +74,7 @@ print('..........................Entrando no modulo Reconhcimento...............
       #      'PE-F-2603405-14110-20230627',
        #   }
 
-caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\protcolos_ac.xlsx'
+caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\protocolos_MA.xlsx'
 caminho_relatorio = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\modelorelatorio_arquivosgerados.xlsx'
 protocolos = pd.read_excel(caminho_protocolos)
 relatorio = pd.read_excel(caminho_relatorio)
@@ -294,8 +295,16 @@ for index, row in protocolos.iterrows():
     driver.find_element(By.ID, 'accordion:j_idt161').click()
     time.sleep(1)
 
-    # Localizar o elemento "object" e mudar para o frame
-    canva = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'object')))
+    try:
+        # Localizar o elemento "object" e mudar para o frame
+        canva = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'object')))
+    except:
+        print('Protocolo não possui arquivos')
+        relatorio.at[index, 'RESULTADO'] = 'Protocolo não possui arquivos'
+
+        botao_voltar = driver.find_element(By.ID, 'j_idt26').click()
+
+        continue
 
     print('....................................PDF  GERADO.....................................')
 
