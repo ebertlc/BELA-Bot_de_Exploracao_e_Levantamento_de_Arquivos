@@ -46,9 +46,6 @@ botao_ok.click()
 print('\n\n')
 print('.....................................S2iD Ativo.....................................')
 
-Login = 'eber.elias@mdr.gov.br'
-Senha = 'Flasco@4528'
-
 # Fazer login
 usuario_login = driver.find_element(By.ID, 'usuario').send_keys(Login)
 senha_login = driver.find_element(By.ID, 'j_idt56').send_keys(Senha)
@@ -64,23 +61,10 @@ rec_federal.click()
 
 print('..........................Entrando no modulo Reconhcimento..........................')
 
-# Definir o protocolo a ser pesquisado -  Por Enquanto
-#protocolos = {'AC-F-1200401-12100-20130325',
- #           'RN-F-2410603-14110-20230713',
-  #          'AC-F-1200401-14110-20160707',
-   #         'PA-F-1506609-13214-20230626',
-    #        'PR-F-4102901-12100-20230711',
-     #       'AL-F-2701100-13214-20230708',
-      #      'PE-F-2603405-14110-20230627',
-       #   }
-
 caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\protocolos_MA.xlsx'
 caminho_relatorio = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\modelorelatorio_arquivosgerados.xlsx'
 protocolos = pd.read_excel(caminho_protocolos)
 relatorio = pd.read_excel(caminho_relatorio)
-#index = 0
-#for protocolo in protocolos:
- #   index += 1
 
 for index, row in protocolos.iterrows():
     protocolo = row['PROTOCOLO']
@@ -90,7 +74,7 @@ for index, row in protocolos.iterrows():
 
     relatorio.at[index, 'MUNICIPIO'] = municipio
     relatorio.at[index, 'DATA'] = data
-    relatorio.at[index, 'PROTOCOLO'] = protocolo
+    relatorio.at[index, 'PROTOCOLO'] = protocoloE
 
     # Iniciar o cronômetro
     start_time = time.time()
@@ -134,31 +118,16 @@ for index, row in protocolos.iterrows():
 
     arquivos_disponiveis = ''
 
-    print('.............................Procurando  RECONHECIMENTO.............................')
-    # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do Reconhecimento e expandi-la
-    for pasta in range(0, 50):
-        id = f"accordion:arquivos_disponiveis:{pasta}"
-        print(f'......................................pasta  {pasta+1}......................................')
+print('.............................Procurando  RECONHECIMENTO.............................')
+# Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do Reconhecimento e expandi-la
+for pasta in range(0, 50):
+    id = f"accordion:arquivos_disponiveis:{pasta}"
+    print(f'......................................pasta  {pasta+1}......................................')
 
-        # Verifica se o id existe
-        try:
-            arquivo = detalhes.find_element(By.ID, id)
-        except:
-            continue
-
-        # Encontrar o elemento de tag que contém o texto do nó
-        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
-        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
-        # Verificar se o texto da tag é igual a 'RECONHECIMENTO'
-        if tag.text == 'RECONHECIMENTO':
-            print(f'........................RECONHECIMENTO Encontrado na Pasta {pasta + 1}........................')
-            arquivos_disponiveis = id
-            # Encontrar o elemento de expansão para mostrar os subelementos
-            reconhecimento = arquivo.find_element(By.TAG_NAME, 'span')
-            espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler').click()
-            # Sair do loop
-            break
-    else:
+    # Verifica se o id existe
+    try:
+        arquivo = detalhes.find_element(By.ID, id)
+    except:
         print("RECONHECIMENTO não encontrado em nenhuma pasta.")
         for pasta in range(0, 50):
             print(f'......................................pasta  {pasta + 1}......................................')
@@ -186,108 +155,25 @@ for index, row in protocolos.iterrows():
             relatorio.at[index, 'RESULTADO'] = 'Protocolo não possui arquivos'
 
             botao_voltar = driver.find_element(By.ID, 'j_idt26').click()
-            continue
-    time. sleep(2)
-
-    print('.................................Procurando  CAPA..................................')
-    # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do DMATE e marca-la
-    for pasta in range(0, 50):
-        id = f"{arquivos_disponiveis}_{pasta}"
-        print(f'......................................pasta  {pasta+1}......................................')
-
-        # Verifica se o id existe
-        try:
-            arquivo = detalhes.find_element(By.ID, id)
-        except:
+            time. sleep(2)
             continue
 
-        # Encontrar o elemento de tag que contém o texto do nó
-        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
-        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
-        # Verificar se o texto da tag é igual a 'DMATE'
-        if tag.text == 'CAPA':
-            print(f'............................CAPA Encontrada na Pasta {pasta+1}.............................')
-            # Encontrar o elemento de checkbox para marcar os subelementos
-            checkbox = arquivo.find_element(By.TAG_NAME, 'span')
-            checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
-            checkbox_cls.click()
-            # Sair do loop
-            break
+    # Encontrar o elemento de tag que contém o texto do nó
+    subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
+    tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
+    # Verificar se o texto da tag é igual a 'RECONHECIMENTO'
+    if tag.text == 'RECONHECIMENTO':
+        print(f'........................RECONHECIMENTO Encontrado na Pasta {pasta + 1}........................')
+        arquivos_disponiveis = id
+        # Encontrar o elemento de expansão para mostrar os subelementos
+        reconhecimento = arquivo.find_element(By.TAG_NAME, 'span')
+        espandir = reconhecimento.find_element(By.CLASS_NAME, 'ui-tree-toggler').click()
 
-   # print('.................................Procurando  DMATE..................................')
-    # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do DMATE e marca-la
-    #for pasta in range(0, 50):
-     #   id = f"{arquivos_disponiveis}_{pasta}"
-      #  print(f'......................................pasta  {pasta+1}......................................')
+        documentos = {'CAPA', 'FIDE', 'DEMATE', 'DEATE'}
 
-        # Verifica se o id existe
-       # try:
-        #    arquivo = detalhes.find_element(By.ID, id)
-     #   except:
-      #      continue
+        for docs in documentos:
 
-        # Encontrar o elemento de tag que contém o texto do nó
-      #  subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
-       # tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
-        # Verificar se o texto da tag é igual a 'DMATE'
-      #  if tag.text == 'DMATE':
-       #     print(f'............................DMATE Encontrado na Pasta {pasta+1}.............................')
-            # Encontrar o elemento de checkbox para marcar os subelementos
-        #    checkbox = arquivo.find_element(By.TAG_NAME, 'span')
-         #   checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
-          #  checkbox_cls.click()
-            # Sair do loop
-           # break
-
-    print('..................................Procurando FIDE...................................')
-    # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do FIDE e marca-la
-    for pasta in range(0, 50):
-        id = f"{arquivos_disponiveis}_{pasta}"
-        print(f'......................................pasta  {pasta+1}......................................')
-
-        # Verifica se o id existe
-        try:
-            arquivo = driver.find_element(By.ID, id)
-        except:
-            continue
-
-        # Encontrar o elemento de tag que contém o texto do nó
-        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
-        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
-        # Verificar se o texto da tag é igual a 'FIDE'
-        if tag.text == 'FIDE':
-            print(f'............................FIDE Encontrado na Pasta {pasta+1}..............................')
-            # Encontrar o elemento de checkbox para marcar os subelementos
-            checkbox = arquivo.find_element(By.TAG_NAME, 'span')
-            checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
-            checkbox_cls.click()
-            # Sair do loop
-            break
-
-    #print('..................................Procurando DEATE...................................')
-    # Iterar através de um range de 0 a 49 para percorrer as ids até Encontrar o pasta do FIDE e marca-la
-    #for pasta in range(0, 50):
-    #    id = f"{arquivos_disponiveis}_{pasta}"
-    #    print(f'......................................pasta  {pasta+1}......................................')
-#
-   #     # Verifica se o id existe
-    #    try:
-     #       arquivo = driver.find_element(By.ID, id)
-      #  except:
-       #     continue
-
-        # Encontrar o elemento de tag que contém o texto do nó
-    #    subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
-     #   tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
-        # Verificar se o texto da tag é igual a 'FIDE'
-      #  if tag.text == 'DEATE':
-       #     print(f'............................DEATE Encontrado na Pasta {pasta+1}..............................')
-        #    # Encontrar o elemento de checkbox para marcar os subelementos
-         #   checkbox = arquivo.find_element(By.TAG_NAME, 'span')
-          #  checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
-           # checkbox_cls.click()
-            # Sair do loop
-            #break
+            procurar_elemento(detalhes, arquivos_disponiveis, docs)
 
     time.sleep(1)
 
@@ -331,7 +217,6 @@ for index, row in protocolos.iterrows():
     time.sleep(5)
     #definir o caminho onde será salvo e o nome do aqruivo
     caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_{municipio}_{protocolo}_{status}.pdf'
-    #caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_teste_{protocolo}_teste{index}.pdf'
 
     app = Application(backend="win32").connect(title='Salvar como')
     dlg = app.window(title='Salvar como')
@@ -388,3 +273,32 @@ driver.close()
 
 print('\n\n')
 print('.................................Script Execultado..................................')
+
+def procurar_elemento(driver, arquivos_disponiveis, documento_procurado):
+
+    print(f'.................................Procurando  {documento_procurado}..................................')
+
+    for pasta in range(0, 50):
+
+        id = f"{arquivos_disponiveis}_{pasta}"
+
+        print(f'......................................pasta  {pasta+1}......................................')
+
+        # Verifica se o id existe
+        try:
+            arquivo = driver.find_element(By.ID, id)
+        except:
+            break
+
+        # Encontrar o elemento de tag que contém o texto do nó
+        subarquivo = arquivo.find_element(By.TAG_NAME, 'span')
+        tag = subarquivo.find_element(By.CLASS_NAME, 'ui-treenode-label')
+        # Verificar se o texto da tag é igual a 'FIDE'
+        if tag.text == documento_procurado:
+            print(f'............................{documento_procurado} Encontrado na Pasta {pasta+1}..............................')
+            # Encontrar o elemento de checkbox para marcar os subelementos
+            checkbox = arquivo.find_element(By.TAG_NAME, 'span')
+            checkbox_cls = checkbox.find_element(By.CLASS_NAME, 'ui-chkbox-icon')
+            checkbox_cls.click()
+            # Sair do loop
+            break
