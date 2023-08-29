@@ -46,12 +46,12 @@ botao_ok.click()
 print('\n\n')
 print('.....................................S2iD Ativo.....................................')
 
-Login = 'eber.elias@mdr.gov.br'
-Senha = 'Flasco@4528'
-
 # Fazer login
+Login = input('Insira o Email S2iD: ')
 usuario_login = driver.find_element(By.ID, 'usuario').send_keys(Login)
+Senha = input('Insira a senha S2iD: ')
 senha_login = driver.find_element(By.ID, 'j_idt56').send_keys(Senha)
+
 time.sleep(1)
 
 botao_login = driver.find_element(By.ID, 'btnEnter').click()
@@ -64,18 +64,10 @@ rec_federal.click()
 
 print('..........................Entrando no modulo Reconhcimento..........................')
 
-# Definir o protocolo a ser pesquisado -  Por Enquanto
-#protocolos = {'AC-F-1200401-12100-20130325',
- #           'RN-F-2410603-14110-20230713',
-  #          'AC-F-1200401-14110-20160707',
-   #         'PA-F-1506609-13214-20230626',
-    #        'PR-F-4102901-12100-20230711',
-     #       'AL-F-2701100-13214-20230708',
-      #      'PE-F-2603405-14110-20230627',
-       #   }
+caminho_protocolos = 'C:\\Users\\eber.elias\\OneDrive - Ministério do Desenvolvimento Regional\\Documentos\\Arquivos\\Base\\Protocolos_SP_RJ_2023-08-28.xlsx'
+caminho_relatorio = 'C:\\Users\\eber.elias\\OneDrive - Ministério do Desenvolvimento Regional\\Documentos\\Arquivos\\Base\\modelorelatorio_arquivosgerados.xlsx'
 
-caminho_protocolos = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\protocolos_MA.xlsx'
-caminho_relatorio = 'C:\\Users\\eber_\\Documents\\delveloper\\MIDR\\aquivos\\modelorelatorio_arquivosgerados.xlsx'
+
 protocolos = pd.read_excel(caminho_protocolos)
 relatorio = pd.read_excel(caminho_relatorio)
 #index = 0
@@ -129,6 +121,7 @@ for index, row in protocolos.iterrows():
     # Aguardar até o elemento onde os arquivos estão apareça
     detalhes = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'accordion:j_idt152')))
 
+
     #rolar até o fim da pagina
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
@@ -177,7 +170,7 @@ for index, row in protocolos.iterrows():
                 # Encontrar o elemento de checkbox para marcar os subelementos
                 time.sleep(1)
                 checkbox_if = subarquivo_if.find_element(By.TAG_NAME, 'span').click()
-                #checkbox_if.find_element(By.CLASS_NAME, 'ui-chkbox-icon').click()
+                # checkbox_if.find_element(By.CLASS_NAME, 'ui-chkbox-icon').click()
                 # Sair do loop
                 break
         else:
@@ -297,7 +290,7 @@ for index, row in protocolos.iterrows():
 
     try:
         # Localizar o elemento "object" e mudar para o frame
-        canva = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'object')))
+        canva = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.TAG_NAME, 'object')))
     except:
         print('Protocolo não possui arquivos')
         relatorio.at[index, 'RESULTADO'] = 'Protocolo não possui arquivos'
@@ -330,8 +323,8 @@ for index, row in protocolos.iterrows():
 
     time.sleep(5)
     #definir o caminho onde será salvo e o nome do aqruivo
-    caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_{municipio}_{protocolo}_{status}.pdf'
-    #caminho = f'C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_teste_{protocolo}_teste{index}.pdf'
+
+    caminho = f'C:\\Users\\eber.elias\\OneDrive - Ministério do Desenvolvimento Regional\\Documentos\\Arquivos\\Arquivos Gerados\\FIDE-DEMATE_{municipio}_{protocolo}_{status}.pdf'
 
     app = Application(backend="win32").connect(title='Salvar como')
     dlg = app.window(title='Salvar como')
@@ -378,7 +371,7 @@ for index, row in protocolos.iterrows():
     # Imprimir o tempo de execução
     print(f"Tempo de execução: {execution_time} segundos")
 
-relatorio.to_excel('C:\\Users\\eber_\\Documents\\S2iD\\Arquivos_gerados\\FIDE-DEMATE_Relatorio.xlsx', index=False)
+relatorio.to_excel('C:\\Users\\eber.elias\\OneDrive - Ministério do Desenvolvimento Regional\\Documentos\\Arquivos\\Arquivos Gerados\\FIDE-DEMATE_Relatorio.xlsx', index=False)
 
 # Deslogar do sistema
 time.sleep(10)
